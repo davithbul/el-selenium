@@ -1,4 +1,4 @@
-package el.selenium.services;
+package el.selenium.drivers.page;
 
 import com.google.common.base.Predicate;
 import el.selenium.factory.WebDriverFactory;

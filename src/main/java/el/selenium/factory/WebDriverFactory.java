@@ -97,7 +97,7 @@ public class WebDriverFactory {
                 return new FirefoxDriver(desiredCapabilities);
             }
         },
-        HTML_UNITY {
+        HTML_UNIT {
             @Override
             WebDriver getDriver(Map<String, Object> preferences) {
                 BrowserVersion browser = BrowserVersion.FIREFOX_45;

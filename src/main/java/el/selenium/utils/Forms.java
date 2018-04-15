@@ -1,7 +1,7 @@
 package el.selenium.utils;
 
 import el.selenium.model.*;
-import el.selenium.services.PageDriver;
+import el.selenium.drivers.page.PageDriver;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;

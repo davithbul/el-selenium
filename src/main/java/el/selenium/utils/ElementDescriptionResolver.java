@@ -5,7 +5,7 @@ import el.selenium.model.ElementDescription;
 import el.selenium.model.ElementDescriptorTree;
 import el.selenium.model.ListElementDescription;
 import el.selenium.model.WebElementProxy;
-import el.selenium.services.PageDriver;
+import el.selenium.drivers.page.PageDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

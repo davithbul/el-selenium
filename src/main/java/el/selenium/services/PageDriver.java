@@ -472,14 +472,6 @@ public class PageDriver implements AutoCloseable {
         }
     }
 
-    public void takeDebugScreenShot(String fileName) {
-        takeScreenShot(DriverLogFileProvider.getDebugScreenShotDir(), fileName);
-    }
-
-    public void takeBetScreenShot(String fileName) {
-        takeScreenShot(DriverLogFileProvider.getScreenShotDir(), fileName);
-    }
-
     public void takeScreenShot(String dirName, String fileName) {
         try {
 //            fileName = StringUtils.remove(fileName, "/");

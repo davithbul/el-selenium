@@ -1,13 +1,14 @@
 package el.selenium.drivers;
 
-import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebWindow;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import el.selenium.utils.CommandExecutor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -16,6 +17,8 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.internal.Base64Encoder;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -95,10 +98,9 @@ public class ExtendedHtmlUnitDriver extends HtmlUnitDriver implements TakesScree
         String xPathExpression = "//*[name() = 'img' or name() = 'link' and (@type = 'text/css' or @type = 'image/x-icon') or  @type = 'text/javascript']";
         List<?> resultList = page.getByXPath(xPathExpression);
 
-        Iterator<?> i = resultList.iterator();
-        while (i.hasNext()) {
+        for (Object aResultList : resultList) {
             try {
-                HtmlElement el = (HtmlElement) i.next();
+                HtmlElement el = (HtmlElement) aResultList;
                 String resourceSourcePath = el.getAttribute("src").equals("") ? el.getAttribute("href") : el
                         .getAttribute("src");
                 if (resourceSourcePath == null || resourceSourcePath.equals(""))
@@ -129,7 +131,7 @@ public class ExtendedHtmlUnitDriver extends HtmlUnitDriver implements TakesScree
         return createZip(files);
     }
 
-    String downloadCss(WebClient webClient, WebWindow window, URL resourceUrl) throws Exception {
+    private String downloadCss(WebClient webClient, WebWindow window, URL resourceUrl) throws Exception {
         if (cssjsCache.get(resourceUrl.toString()) == null) {
             cssjsCache.put(resourceUrl.toString(), webClient.getPage(window, new WebRequest(resourceUrl))
                     .getWebResponse().getContentAsString());
@@ -138,7 +140,7 @@ public class ExtendedHtmlUnitDriver extends HtmlUnitDriver implements TakesScree
         return cssjsCache.get(resourceUrl.toString());
     }
 
-    byte[] downloadImage(WebClient webClient, WebWindow window, URL resourceUrl) throws Exception {
+    private byte[] downloadImage(WebClient webClient, WebWindow window, URL resourceUrl) throws Exception {
         if (imagesCache.get(resourceUrl.toString()) == null) {
             imagesCache.put(
                     resourceUrl.toString(),
@@ -164,7 +166,7 @@ public class ExtendedHtmlUnitDriver extends HtmlUnitDriver implements TakesScree
         return bos.toByteArray();
     }
 
-    List<String> getLinksFromCss(String css) {
+    private List<String> getLinksFromCss(String css) {
         List<String> result = new LinkedList<String>();
         Matcher m = cssUrlPattern.matcher(css);
         while (m.find()) { // find next match
@@ -173,7 +175,7 @@ public class ExtendedHtmlUnitDriver extends HtmlUnitDriver implements TakesScree
         return result;
     }
 
-    String replaceRemoteUrlsWithLocal(String source, Map<String, String> replacement) {
+    private String replaceRemoteUrlsWithLocal(String source, Map<String, String> replacement) {
         for (String object : replacement.keySet()) {
             // background:url(http://org.com/images/image.gif)
             source = source.replace(object, replacement.get(object));
@@ -181,7 +183,7 @@ public class ExtendedHtmlUnitDriver extends HtmlUnitDriver implements TakesScree
         return source;
     }
 
-    String mapLocalUrl(HtmlPage page, URL link, String path, Map<String, String> replacementToAdd) throws Exception {
+    private String mapLocalUrl(HtmlPage page, URL link, String path, Map<String, String> replacementToAdd) throws Exception {
         String resultingFileName = "resources/" + FilenameUtils.getName(link.getFile());
         replacementToAdd.put(path, resultingFileName);
         return resultingFileName;
